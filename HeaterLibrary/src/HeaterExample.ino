@@ -6,11 +6,11 @@
 //heaterOne instantiation - This is an example using a thermistor - check heaterTwo if you want to rather use a Thermocouple.
 //=============================
 Flasher hotFlasher_PM(21); //input the digital pin that you want to flash some kind of heater element with eg. the pin attached to an SSR Relay, attached to a stove.
-Flasher fanFlasher_PM(20); //input the digital pin that you want to use for cooling.  When the Target Temp is close or surpassed this pin goes HIGH to prevent over-shooting.
+Flasher fanFlasher_PM(20); //input the digital pin that you want to use for cooling.  When the Target Temp is approaching or surpassed, this pin goes HIGH to prevent over-shooting.
 Thermistor pm(A0); //input the analogue pin for your thermistor. This creates the Thermistor object for heaterOne to use.
-TempSensor *tMistor_PM = &pm; //to allow you to choose whether you want your heater to use a thermistor or thermocouple we need some pointers. In the next line we put tMistor_PM into heaterOne.
+TempSensor *tMistor_PM = &pm; //Sorry for pointers in the Sourcefile. To allow you to choose whether you want your heater to use a thermistor or thermocouple we need some pointers. In the next line we put tMistor_PM into heaterOne.
 Heater heaterOne("Heater One", hotFlasher_PM, fanFlasher_PM, tMistor_PM);
-//Notice above that the Flasher object named allocationObj_Flasher is inserted into Heater object named pm, by calling it's name!!!
+//Notice above that the Flasher object named allocationObj_Flasher is inserted into Heater object named pm, by calling it's name.
 
 //The result:  every time we need a new Heater Object for a particular zone, we just give it a new name and attributes.
 //------------------end of heaterOne instantiation
@@ -35,12 +35,12 @@ void setup(){
   heaterOne.setup(); //sets up the required pins
   heaterOne.printInfo(); // optional (more for debugging)
   heaterOne.setMinMaxTemp(5, 45); // set up the operating range for the heater. Think room-temp to Max operating temp. Here it is set to 45 deg C for testing with a coffee-cup
-  heaterOne.setTargetTemp(20); // set target temp in C. Probably the most important function. In my application this function will be used repeatedly to set new target temps for each heater.
+  heaterOne.setTargetTemp(43); // set target temp in C. Probably the most important function. In my application this function will be used repeatedly to set new target temps for each heater.
 
   heaterTwo.setup();
   heaterTwo.printInfo(); // optional (more for debugging)
   heaterTwo.setMinMaxTemp(20, 60);
-  heaterTwo.setTargetTemp(23);
+  heaterTwo.setTargetTemp(54);
  }
 
 void loop(){
