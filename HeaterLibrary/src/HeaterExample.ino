@@ -1,4 +1,5 @@
-//For now, make sure you have these libraries in the same folder 
+//For now, and for Arduino IDE, make sure you have these libraries in the same folder as the ino file.
+//TempSensor.h contains and uses its own versions of the standard Thermistor and Thermocouple libraries.
 
 #include "Heater.h"
 #include "Flasher.h"
@@ -37,7 +38,7 @@ void setup(){
   heaterOne.setup(); //sets up the required pins
   heaterOne.printInfo(); // optional (more for debugging)
   heaterOne.setMinMaxTemp(5, 45); // set up the operating range for the heater. Think room-temp to Max operating temp. Here it is set to 45 deg C for testing with a coffee-cup
-  heaterOne.setTargetTemp(43); // set target temp in C. Probably the most important function. In my application this function will be used repeatedly to set new target temps for each heater.
+  heaterOne.setTargetTemp(43); // set target temp in C. This is the Heater Object's most important function. In my application this function will be used repeatedly to set new target temps for each heater, according to the Emptying or Filling state of the different Heat Zones.
 
   heaterTwo.setup();
   heaterTwo.printInfo(); // optional (more for debugging)
