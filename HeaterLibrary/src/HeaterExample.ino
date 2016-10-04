@@ -1,7 +1,9 @@
+//For now, make sure you have these libraries in the same folder 
+
 #include "Heater.h"
 #include "Flasher.h"
 #include "TempSensor.h"
-#include <arduino.h>
+//#include <arduino.h> //My IDE required this. Don't think arduino ide needs it.
 
 //heaterOne instantiation - This is an example using a thermistor - check heaterTwo if you want to rather use a Thermocouple.
 //=============================
@@ -15,7 +17,7 @@ Heater heaterOne("Heater One", hotFlasher_PM, fanFlasher_PM, tMistor_PM);
 //The result:  every time we need a new Heater Object for a particular zone, we just give it a new name and attributes.
 //------------------end of heaterOne instantiation
 
-//heaterTwo instantiation - This is an example using a thermocouple. Perhaps developers could help give other options for TempSensing in the heater?
+//heaterTwo instantiation - This is an example using a thermocouple. Perhaps developers could help give other options for TempSensing in tempSensor.h 
 //=============================
 Flasher hotFlasher_RC(19);
 Flasher fanFlasher_RC(18);
