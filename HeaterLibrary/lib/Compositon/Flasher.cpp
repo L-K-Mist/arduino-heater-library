@@ -12,8 +12,17 @@
 Flasher::Flasher(int flasherPin)
 {
   flasherPin_ = flasherPin;
-
 }
+
+
+Flasher::Flasher(int flasherPin, long on, long off) 
+  {
+   flasherPin_ = flasherPin;
+   _onTime = on;
+   _offTime = off;
+   _digiState = LOW;
+   _previousMillis = 0;
+    }
 
 
 void Flasher::printFlasherAllocation(){
@@ -30,14 +39,6 @@ void Flasher::loop(){
   this->update();
 
   }
-
-  Flasher::Flasher(int flasherPin, long on, long off) {
-             flasherPin_ = flasherPin;
-             _onTime = on;
-             _offTime = off;
-             _digiState = LOW;
-             _previousMillis = 0;
-          }
 
   void Flasher::update() {
     // check to see if it's time to change the state of the LED
@@ -66,7 +67,7 @@ void Flasher::loop(){
   {
 
 //TODO elevate states to functions
-    _state = state; // initial state is 1, the "idle" state.
+    _state = state; 
 
     switch(_state)
     {
