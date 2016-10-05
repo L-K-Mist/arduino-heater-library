@@ -14,7 +14,6 @@ Flasher::Flasher(int flasherPin)
   flasherPin_ = flasherPin;
 }
 
-
 Flasher::Flasher(int flasherPin, long on, long off) 
   {
    flasherPin_ = flasherPin;
@@ -23,7 +22,6 @@ Flasher::Flasher(int flasherPin, long on, long off)
    _digiState = LOW;
    _previousMillis = 0;
     }
-
 
 void Flasher::printFlasherAllocation(){
   Serial.print("Flasher on pin ");
