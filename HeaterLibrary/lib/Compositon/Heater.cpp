@@ -58,34 +58,34 @@ void Heater::controlFlasher()  {
   // map the sensor range to a range of four options:
   int range = map(sensorReading, sensorMin_, sensorMax_, 0, 10);
   Serial.print("Range is: ");
-  Serial.println(range);
+  Serial.println(range); //just for debugging
   // do something different depending on the
   // range value:
-  if (range > 0 && range < 7) {
+  if (range > 0 && range < 7) { //always gallop when temp is below sensorMin
     hotAllocation.setState(GALLOP);
-    Serial.println("flasher Galloping");
+    Serial.println("flasher below Min Temp... Galloping");
   }
   switch (range) {
-    case 0:    // your hand is on the sensor
+    case 0:    // temp is at sensorMin Celsius
       {
         hotAllocation.setState(GALLOP);
         Serial.println("flasher Galloping");
       }
       break;
-    case 7:    // your hand is close to the sensor
+    case 7:    // 70% towards Target
       {
         hotAllocation.setState(TROT);
         Serial.println("flasher Trotting");
       }
 
       break;
-    case 8:    // your hand is a few inches from the sensor
+    case 8:    // 80% towards Target
       {
         hotAllocation.setState(CRAWL);
         Serial.println("flasher Crawling");
       }
       break;
-    case 9:    // your hand is nowhere near the sensor
+    case 9:    // 90%
       {
         hotAllocation.setState(IDLE);
         fanAllocation.setState(GALLOP); //255 is Max spinning of fan.
