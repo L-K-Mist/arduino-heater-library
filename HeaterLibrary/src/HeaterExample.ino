@@ -13,7 +13,6 @@ Flasher fanFlasher_PM(20); //input the digital pin that you want to use for cool
 Thermistor pm(A0); //input the analogue pin for your thermistor. This creates the Thermistor object for heaterOne to use.
 TempSensor *tMistor_PM = &pm; //Sorry for pointers in the Sourcefile. To allow you to choose whether you want your heater to use a thermistor or thermocouple we need some pointers. In the next line we put tMistor_PM into heaterOne.
 Heater heaterOne("Heater One", hotFlasher_PM, fanFlasher_PM, tMistor_PM);
-//Notice above that the Flasher object named allocationObj_Flasher is inserted into Heater object named pm, by calling it's name.
 
 //The result:  every time we need a new Heater Object for a particular zone, we just give it a new name and attributes.
 //------------------end of heaterOne instantiation
