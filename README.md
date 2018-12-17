@@ -8,5 +8,8 @@ Some credits are due:
   Of course a LOT of google was done to get this far, but Paul Murray's Arduino the Object Way article was where the penny really dropped   for me: http://paulmurraycbr.github.io/ArduinoTheOOWay.html#thespookyway 
 
   I love his Design Pattern for Arduino of using lots of polymorphic setup and loop functions in his classes. 
+  
+  As in: Use the standard arduino setup and loop functions within your library so that you can then do `void myClass.setup()`  and `void myClass.loop` in the client code.
+
 
   For the State Machine aspects: https://hackingmajenkoblog.wordpress.com/2016/02/01/the-finite-state-machine/ 
