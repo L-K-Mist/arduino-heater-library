@@ -17,12 +17,6 @@ Heater::Heater(String name, Flasher allocHot, Flasher allocFan, TempSensor* allo
   {
   }
 
-void Heater::printInfo(){
-  Serial.print(name_);
-  Serial.println(" Heater, is now in control of: ");
-  hotAllocation.printFlasherAllocation();
-  fanAllocation.printFlasherAllocation();
-  }
 void Heater::setup(){
   senseAllocation->setup();
   hotAllocation.setup();

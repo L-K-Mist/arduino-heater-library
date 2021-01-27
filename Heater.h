@@ -4,7 +4,6 @@
 #include "TempSensor.h"
 #include <Arduino.h>
 
-
 class Heater
 {
 public:
@@ -12,7 +11,6 @@ public:
   void setTargetTemp(unsigned int targetTemp);
   void setMinMaxTemp(int sensorMin, int sensorMax);
   void controlFlasher();
-  void printInfo();
   void setup();
   void loop();
   double zoneTempC = 0;

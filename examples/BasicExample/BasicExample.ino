@@ -26,6 +26,14 @@ TempSensor *tCouple = &thermoC;
 
 Flasher hotFlasher(LED_BUILTIN);
 
+enum FlashRate
+{
+  IDLE  = 1,
+  TROT = 2,
+  CRAWL = 3,
+  GALLOP = 4,
+  SHUTDOWN = 5
+};
 
 void setup(){
   delay_6s.start(6000, AsyncDelay::MILLIS);
@@ -35,7 +43,7 @@ void setup(){
   thermoC.setup();
 
   hotFlasher.setup();
-  hotFlasher.setState(3);
+  hotFlasher.setState(FlashRate::CRAWL);
  }
 
 void loop(){

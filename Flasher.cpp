@@ -1,6 +1,6 @@
 #include <Arduino.h>
 #include "Flasher.h"
-//#include <Heater.h>
+
 //FLASHER SWITCH CASE STATES
 //==================
 #define IDLE      1
@@ -14,88 +14,62 @@ Flasher::Flasher(int flasherPin)
   flasherPin_ = flasherPin;
 }
 
-Flasher::Flasher(int flasherPin, long on, long off) 
-  {
-   flasherPin_ = flasherPin;
-   _onTime = on;
-   _offTime = off;
-   _digiState = LOW;
-   _previousMillis = 0;
-    }
-
-void Flasher::printFlasherAllocation(){
-  Serial.print("Flasher on pin ");
-  Serial.print(flasherPin_);
-  Serial.println(".");
-  }
-
-void Flasher::setup(){
+void Flasher::setup()
+{
   pinMode(flasherPin_, OUTPUT);
-  }
+}
 
-void Flasher::loop(){
-  this->update();
+void Flasher::loop()
+{
+  // check to see if it's time to change the state of the LED
+  unsigned long currentMillis = millis();
 
-  }
-
-  void Flasher::update() {
-    // check to see if it's time to change the state of the LED
-    unsigned long currentMillis = millis();
-
-    if((_digiState == HIGH) && (currentMillis - _previousMillis >= _onTime))
-    {
-      _digiState = LOW;  // Turn it off
-      _previousMillis = currentMillis;  // Remember the time
-      digitalWrite(flasherPin_, _digiState);  // Update the actual LED
-    }
-    else if ((_digiState == LOW) && (currentMillis - _previousMillis >= _offTime))
-    {
-      _digiState = HIGH;  // turn it on
-      _previousMillis = currentMillis;   // Remember the time
-      digitalWrite(flasherPin_, _digiState);	  // Update the actual LED
-    }
-  }
-
-  // void Flasher::setTimes(long setOn, long setOff) {
-  //   _onTime = setOn;
-  //   _offTime = setOff;
-  // }
-
-  void Flasher::setState(unsigned char state)
+  if((_pinState == HIGH) && (currentMillis - _previousMillis >= _onTime))
   {
-
-//TODO elevate states to functions
-    _state = state; 
-
-    switch(_state)
-    {
-      case IDLE:
-      Serial.print(" yes, idling");
-        _onTime = 500;
-        _offTime = 800;
-      break;
-
-      case CRAWL:
-      Serial.print(" yes, crawling");
-      _onTime = 1000;
-      _offTime = 4000;
-      break;
-
-      case TROT:
-      Serial.print(" yes, trotting");
-      _onTime = 2500;
-      _offTime = 2500;
-      break;
-
-      case GALLOP:
-      Serial.print(" yes, galloping");
-      _onTime = 9000;
-      _offTime = 1000;
-      break;
-
-      case SHUTDOWN:
-      Serial.print(" yes, shutting down");
-      digitalWrite(flasherPin_, LOW);
-      break;
-    }
+    _pinState = LOW;  // Turn it off
+    _previousMillis = currentMillis;  // Remember the time
+    digitalWrite(flasherPin_, _pinState);  // Update the actual LED
   }
+  else if ((_pinState == LOW) && (currentMillis - _previousMillis >= _offTime))
+  {
+    _pinState = HIGH;  // turn it on
+    _previousMillis = currentMillis;   // Remember the time
+    digitalWrite(flasherPin_, _pinState);	  // Update the actual LED
+  }
+}
+
+void Flasher::setState(unsigned char state)
+{
+  _state = state; 
+  switch(_state)
+  {
+    case IDLE:
+    Serial.print(" yes, idling");
+      _onTime = 1000;
+      _offTime = 9000;
+    break;
+
+    case CRAWL:
+    Serial.print(" yes, crawling");
+    _onTime = 4000;
+    _offTime = 6000;
+    break;
+
+    case TROT:
+    Serial.print(" yes, trotting");
+    _onTime = 5000;
+    _offTime = 5000;
+    break;
+
+    case GALLOP:
+    Serial.print(" yes, galloping");
+    _onTime = 9000;
+    _offTime = 1000;
+    break;
+
+    case SHUTDOWN:
+    Serial.print(" yes, shutting down");
+    digitalWrite(flasherPin_, LOW);
+    break;
+  }
+}
