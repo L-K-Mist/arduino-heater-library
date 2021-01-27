@@ -5,20 +5,32 @@
 #include "Flasher.h"
 #include "TempSensor.h"
 #include "MyThermistor.h"
+#include "MyThermocouple.h"
+
+int thermoSCK = 8;
+int thermoCS = 9;
+int thermoSO = 10;
 
 MyThermistor pm(A0); //input the analogue pin for your thermistor. This creates the Thermistor object for heaterOne to use.
+MyThermocouple thermoC(thermoSCK, thermoCS, thermoSO);
 TempSensor *tMistor_PM = &pm; 
+
+
 
 
 void setup(){
   Serial.begin(115200);
   pm.setup();
-
+  delay(500);
+  thermoC.setup();
  }
 
 void loop(){
-  const double celsius = tMistor_PM->getTempC();
-  Serial.print("Temperature: ");
-  Serial.println(celsius);
+  const double celsiusThermistor = tMistor_PM->getTempC();
+  const float celsiusThermocouple = thermoC.getTempC();
+  Serial.print("Thermistor: ");
+  Serial.println(celsiusThermistor);
+  Serial.print("Thermocouple: ");
+  Serial.println(celsiusThermocouple);
   delay(2000);
 }

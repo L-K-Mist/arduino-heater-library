@@ -35,9 +35,9 @@ class MyThermistor: public TempSensor {
       thermistor = new SmoothThermistor(originThermistor, SMOOTHING_FACTOR);
     }
     double getTempC (void)
-      {
-       thermistor->readCelsius();
-      }
+    {
+       return thermistor->readCelsius();
+    }
     void loop (){
       this->getTempC();
     }
