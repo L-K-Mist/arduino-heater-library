@@ -71,20 +71,20 @@ void Flasher::loop(){
     {
       case IDLE:
       Serial.print(" yes, idling");
-        _onTime = 1000;
-        _offTime = 16000;
+        _onTime = 500;
+        _offTime = 800;
       break;
 
       case CRAWL:
       Serial.print(" yes, crawling");
-      _onTime = 2000;
-      _offTime = 8000;
+      _onTime = 1000;
+      _offTime = 4000;
       break;
 
       case TROT:
       Serial.print(" yes, trotting");
-      _onTime = 5000;
-      _offTime = 5000;
+      _onTime = 2500;
+      _offTime = 2500;
       break;
 
       case GALLOP:
