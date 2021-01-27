@@ -1,4 +1,4 @@
- #include <arduino.h>
+ #include <Arduino.h>
 #include "TempSensor.h"
 
 // void TempSensor::setMisterPin (int analoguePin)
@@ -17,7 +17,7 @@
 //     miso = thermoDO;
 //    }
 
- void TempSensor::printarea(){
-   Serial.print("printing Area ");
-   Serial.println(zoneTempC);
- }
+//  void TempSensor::printarea(){
+//    Serial.print("printing Area ");
+//    Serial.println(zoneTempC);
+//  }

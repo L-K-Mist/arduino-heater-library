@@ -1,7 +1,7 @@
 #ifndef FLASHER_H
 #define  FLASHER_H
 //#include <TempSensor.h>
-#include <arduino.h>
+#include <Arduino.h>
 
 // //FLASHER SWITCH CASE STATES
 // //==================

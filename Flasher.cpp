@@ -1,4 +1,4 @@
-#include <arduino.h>
+#include <Arduino.h>
 #include "Flasher.h"
 //#include <Heater.h>
 //FLASHER SWITCH CASE STATES

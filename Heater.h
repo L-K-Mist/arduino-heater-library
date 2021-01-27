@@ -2,7 +2,7 @@
 #define  HEATER_H
 #include "Flasher.h"
 #include "TempSensor.h"
-#include <arduino.h>
+#include <Arduino.h>
 
 
 class Heater
