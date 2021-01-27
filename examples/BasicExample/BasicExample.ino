@@ -13,7 +13,14 @@ int thermoSO = 10;
 
 MyThermistor pm(A0); //input the analogue pin for your thermistor. This creates the Thermistor object for heaterOne to use.
 MyThermocouple thermoC(thermoSCK, thermoCS, thermoSO);
+// A TempSensor can be either a MyThermistor or a MyThermocouple
+// The TempSensor class behaves more like an interface, making sure that 
+// either option exposes a getTempC function.
+// In this case it is inheritance: A TempSensor *is a* Thermocouple or a Thermistor.
+// 
 TempSensor *tMistor_PM = &pm; 
+TempSensor *tCouple = &thermoC;
+
 
 
 
@@ -27,7 +34,7 @@ void setup(){
 
 void loop(){
   const double celsiusThermistor = tMistor_PM->getTempC();
-  const float celsiusThermocouple = thermoC.getTempC();
+  const float celsiusThermocouple = tCouple->getTempC();
   Serial.print("Thermistor: ");
   Serial.println(celsiusThermistor);
   Serial.print("Thermocouple: ");
