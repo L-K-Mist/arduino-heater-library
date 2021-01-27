@@ -8,15 +8,7 @@
 
 class TempSensor {
   protected:
-
-    //virtual ~TempSensor()=0;  // This is the destructor: declaration
-
   public:
-    // TempSensor(int analoguePin):
-    //   analoguePin_(analoguePin){};
-    // TempSensor(int analoguePin, int VCC, int GND, int thermoCLK, int thermoCS, int thermoDO):
-    // analoguePin_(analoguePin), vccPin(VCC), gndPin(GND), sclk(thermoCLK), cs(thermoCS), miso(thermoDO){};
-
     double zoneTempC;
     virtual double getTempC() =0;
     virtual void setup() =0;
@@ -45,7 +37,7 @@ class Thermistor: public TempSensor {
         // The beta coefficient of the thermistor (usually 3000-4000)
         #define BCOEFFICIENT 3950
         // the value of the 'other' resistor
-        #define SERIESRESISTOR 80000
+        #define SERIESRESISTOR 100000
 
         int samples[NUMSAMPLES];
           //Serial.print ("analogRead: ");
@@ -54,7 +46,7 @@ class Thermistor: public TempSensor {
           uint8_t i;
           for (i=0; i< NUMSAMPLES; i++) {
           samples[i] = analogRead(analoguePin_);
-          //delay(10);   //TODO ditch the delay with State Machine
+          delay(10);   //TODO ditch the delay with State Machine
           }
           // average all the samples out
           float average = 0;
@@ -63,8 +55,7 @@ class Thermistor: public TempSensor {
           }
           average /= NUMSAMPLES;
 
-        //Serial.print("Average analog reading "); //TODO Move to Main
-      //  Serial.println(average);                  //TODO Move to Main
+
 
           // convert the value to resistance
           average = 1023 / average - 1;

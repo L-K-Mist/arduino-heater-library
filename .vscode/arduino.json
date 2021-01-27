@@ -1,4 +1,5 @@
 {
     "sketch": "examples/BasicExample/BasicExample.ino",
-    "board": "arduino:avr:uno"
+    "board": "arduino:avr:uno",
+    "port": "/dev/ttyACM0"
 }
