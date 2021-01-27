@@ -7,9 +7,8 @@
 #include <SmoothThermistor.h>
 #include "TempSensor.h"
 
-#define SENSOR_PIN             A0
-#define REFERENCE_RESISTANCE   80000
-#define NOMINAL_RESISTANCE     100000
+#define REFERENCE_RESISTANCE   100000
+#define NOMINAL_RESISTANCE     90000
 #define NOMINAL_TEMPERATURE    25
 #define B_VALUE                3950
 /**
@@ -27,12 +26,12 @@ class MyThermistor: public TempSensor {
     }
     void setup (){
       Thermistor* originThermistor = new NTC_Thermistor(
-                                                        analoguePin_,
-                                                        REFERENCE_RESISTANCE,
-                                                        NOMINAL_RESISTANCE,
-                                                        NOMINAL_TEMPERATURE,
-                                                        B_VALUE
-                                                      );
+        analoguePin_,
+        REFERENCE_RESISTANCE,
+        NOMINAL_RESISTANCE,
+        NOMINAL_TEMPERATURE,
+        B_VALUE
+      );
       thermistor = new SmoothThermistor(originThermistor, SMOOTHING_FACTOR);
     }
     double getTempC (void)

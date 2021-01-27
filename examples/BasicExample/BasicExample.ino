@@ -7,7 +7,7 @@
 #include "MyThermistor.h"
 
 MyThermistor pm(A0); //input the analogue pin for your thermistor. This creates the Thermistor object for heaterOne to use.
-// TempSensor *tMistor_PM = &pm; 
+TempSensor *tMistor_PM = &pm; 
 
 
 void setup(){
@@ -17,8 +17,8 @@ void setup(){
  }
 
 void loop(){
-  const double celsius = pm.getTempC();
+  const double celsius = tMistor_PM->getTempC();
   Serial.print("Temperature: ");
-  Serial.print(celsius);
+  Serial.println(celsius);
   delay(2000);
 }
