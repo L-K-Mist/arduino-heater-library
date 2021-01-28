@@ -21,12 +21,12 @@ TempSensor *thermistorMain = &pm;
 TempSensor *tCouple = &thermoC;
 
 Flasher hotFlasher(LED_BUILTIN);
-Flasher fanFlasher(12);
+Flasher fanFlasher(12); // 
 
 // Now the heater receives the TempSensor, hotFlasher (usually going to a relay for an element), and coolFlasher (usually going to a fan/radiator)
 // This being an example of composition, and a hardware version of dependency injection.
 // The user still instantiates these dependancies, but gives them to the Heater to control.
-Heater mainHeater(thermistorMain, hotFlasher, fanFlasher);
+Heater mainHeater(tCouple, hotFlasher, fanFlasher);
 
 enum FlashRate
 {
@@ -47,15 +47,15 @@ void setup(){
   delay(500);
   thermoC.setup();
   mainHeater.setup();
-  mainHeater.setMinMaxTemp(25, 35);
-  mainHeater.setTargetTemp(32);
+  mainHeater.setMinMaxTemp(25, 70); // In this case for testing with a cup of hot water.
+  mainHeater.setTargetTemp(55);
  }
 
 void loop(){
     if (delay_6s.isExpired()) {
     Serial.print("     6s delay millis=");
     Serial.println(millis());
-    const double celsiusThermistor = thermistorMain->getTempC();
+    const double celsiusThermistor = thermistorMain->getTempC(); // Because of the composition-based approach, the user is still free to call and use their TempSensor/s independently of the Heater class.
     const double celsiusThermocouple = tCouple->getTempC();
     Serial.print("Thermistor: ");
     Serial.println(celsiusThermistor);

@@ -60,15 +60,8 @@ void Heater::controlFlasher()  {
   int range = map(sensorReading, _sensorMin, _targetTemp, 0, 10);
   Serial.print("Range is: ");
   Serial.println(range); //just for debugging
-  // do something different depending on the
-  // range value:
-  // TODO fix below.
-  // if (range > 0 && range < 7) { //always gallop when temp is below sensorMin
-  //   _hotFlasher.setState(FlashRate::GALLOP);
-  //   Serial.println("flasher below Min Temp... Galloping");
-  // }
   switch (range) {
-    case 0 ... 6:    // temp is at sensorMin Celsius
+    case -2 ... 6:    // temp is at sensorMin Celsius
       {
         _hotFlasher.setState(FlashRate::GALLOP);
         Serial.println("flasher Galloping");
