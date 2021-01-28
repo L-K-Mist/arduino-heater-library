@@ -7,8 +7,8 @@
 #include <SmoothThermistor.h>
 #include "TempSensor.h"
 
-#define REFERENCE_RESISTANCE   100000
-#define NOMINAL_RESISTANCE     90000
+#define REFERENCE_RESISTANCE   80000
+#define NOMINAL_RESISTANCE     80000
 #define NOMINAL_TEMPERATURE    25
 #define B_VALUE                3950
 /**

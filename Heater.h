@@ -15,10 +15,9 @@ public:
   void loop();
   double zoneTempC = 0;
 protected:
-  int sensorMin_;
-  int sensorMax_;
-  unsigned int targetTemp_;
-  String name_;
+  int _sensorMin;
+  int _sensorMax;
+  unsigned int _targetTemp;
   Flasher _hotFlasher;
   Flasher _coolFlasher;
   TempSensor* _tempSensor;
