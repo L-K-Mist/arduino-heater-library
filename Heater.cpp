@@ -12,21 +12,21 @@
 #define SHUTDOWN  5
 
 
-Heater::Heater(String name, Flasher allocHot, Flasher allocFan, TempSensor* allocSense=NULL)
-: name_ (name), hotAllocation (allocHot), fanAllocation(allocFan), senseAllocation (allocSense)
+Heater::Heater(TempSensor* tempSensor = NULL, Flasher hotFlasher, Flasher coolFlasher)
+: _tempSensor(tempSensor), _hotFlasher(hotFlasher), _coolFlasher(coolFlasher)
   {
   }
 
 void Heater::setup(){
-  senseAllocation->setup();
-  hotAllocation.setup();
-  fanAllocation.setup();
+  _tempSensor->setup();
+  _hotFlasher.setup();
+  _coolFlasher.setup();
   }
 
 void Heater::loop(){
-  senseAllocation->loop();
-  hotAllocation.loop();
-  fanAllocation.loop();
+  _tempSensor->loop();
+  _hotFlasher.loop();
+  _coolFlasher.loop();
   //this->setTargetTemp(44);
   }
 
@@ -46,7 +46,7 @@ void Heater::setTargetTemp(unsigned int targetTemp){
   //=======================
 void Heater::controlFlasher()  {
   // read the sensor:
-  double sensorReading = senseAllocation->getTempC();
+  double sensorReading = _tempSensor->getTempC();
 
   sensorMax_ = targetTemp_;
   // map the sensor range to a range of four options:
@@ -56,33 +56,33 @@ void Heater::controlFlasher()  {
   // do something different depending on the
   // range value:
   if (range > 0 && range < 7) { //always gallop when temp is below sensorMin
-    hotAllocation.setState(GALLOP);
+    _hotFlasher.setState(GALLOP);
     Serial.println("flasher below Min Temp... Galloping");
   }
   switch (range) {
     case 0:    // temp is at sensorMin Celsius
       {
-        hotAllocation.setState(GALLOP);
+        _hotFlasher.setState(GALLOP);
         Serial.println("flasher Galloping");
       }
       break;
     case 7:    // 70% towards Target
       {
-        hotAllocation.setState(TROT);
+        _hotFlasher.setState(TROT);
         Serial.println("flasher Trotting");
       }
 
       break;
     case 8:    // 80% towards Target
       {
-        hotAllocation.setState(CRAWL);
+        _hotFlasher.setState(CRAWL);
         Serial.println("flasher Crawling");
       }
       break;
     case 9:    // 90%
       {
-        hotAllocation.setState(IDLE);
-        fanAllocation.setState(GALLOP); //255 is Max spinning of fan.
+        _hotFlasher.setState(IDLE);
+        _coolFlasher.setState(GALLOP); //255 is Max spinning of fan.
         Serial.println("flasher Idle and fan cooling");
       }
       default:

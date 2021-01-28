@@ -7,7 +7,7 @@
 class Heater
 {
 public:
-  Heater(String name, Flasher allocHot, Flasher allocFan, TempSensor* allocSense);
+  Heater(TempSensor* tempSensor, Flasher hotFlasher, Flasher coolFlasher);
   void setTargetTemp(unsigned int targetTemp);
   void setMinMaxTemp(int sensorMin, int sensorMax);
   void controlFlasher();
@@ -19,9 +19,9 @@ protected:
   int sensorMax_;
   unsigned int targetTemp_;
   String name_;
-  Flasher hotAllocation;
-  Flasher fanAllocation;
-  TempSensor* senseAllocation;
+  Flasher _hotFlasher;
+  Flasher _coolFlasher;
+  TempSensor* _tempSensor;
 };
 
 #endif
