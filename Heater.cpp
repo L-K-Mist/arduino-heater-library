@@ -2,98 +2,88 @@
 #include "Flasher.h"
 
 #include "TempSensor.h"
-#include <arduino.h>
-//FLASHER SWITCH CASE STATES
-//==================
-#define IDLE      1
-#define TROT      2
-#define CRAWL     3
-#define GALLOP    4
-#define SHUTDOWN  5
+#include <Arduino.h>
+
+enum FlashRate
+{
+  IDLE  = 1,
+  TROT = 2,
+  CRAWL = 3,
+  GALLOP = 4,
+  SHUTDOWN = 5
+};
 
 
-Heater::Heater(String name, Flasher allocHot, Flasher allocFan, TempSensor* allocSense=NULL)
-: name_ (name), hotAllocation (allocHot), fanAllocation(allocFan), senseAllocation (allocSense)
+Heater::Heater(TempSensor* tempSensor, Flasher hotFlasher, Flasher coolFlasher)
+: _tempSensor(tempSensor), _hotFlasher(hotFlasher), _coolFlasher(coolFlasher)
   {
   }
 
-void Heater::printInfo(){
-  Serial.print(name_);
-  Serial.println(" Heater, is now in control of: ");
-  hotAllocation.printFlasherAllocation();
-  fanAllocation.printFlasherAllocation();
-  }
 void Heater::setup(){
-  senseAllocation->setup();
-  hotAllocation.setup();
-  fanAllocation.setup();
+  _tempSensor->setup();
+  _hotFlasher.setup();
+  _coolFlasher.setup();
   }
 
-void Heater::loop(){
-  senseAllocation->loop();
-  hotAllocation.loop();
-  fanAllocation.loop();
-  //this->setTargetTemp(44);
-  }
 
-//bring to the top
+void Heater::setMinMaxTemp(int sensorMin, int sensorMax)
+{
+    _sensorMin = sensorMin;
+    _sensorMax = sensorMax;
+}
 
-void Heater::setMinMaxTemp(int sensorMin, int sensorMax){
-    sensorMin_ = sensorMin;
-    sensorMax_ = sensorMax;
-  }
-
+void Heater::loop()
+{
+  _tempSensor->loop();
+  _hotFlasher.loop();
+  _coolFlasher.loop();
+  this->controlFlasher();
+}
 
 void Heater::setTargetTemp(unsigned int targetTemp){
-    targetTemp_ = targetTemp;
+    _targetTemp = targetTemp;
   }
 
   // the main State Machine
   //=======================
 void Heater::controlFlasher()  {
   // read the sensor:
-  double sensorReading = senseAllocation->getTempC();
+  double sensorReading = _tempSensor->getTempC();
 
-  sensorMax_ = targetTemp_;
-  // map the sensor range to a range of four options:
-  int range = map(sensorReading, sensorMin_, sensorMax_, 0, 10);
+  if(sensorReading >= _sensorMax || sensorReading >= _targetTemp) {
+    Serial.println("Too Hot! Stopping the heat and gallop the cool.");
+    _coolFlasher.setState(FlashRate::GALLOP); 
+    _hotFlasher.setState(FlashRate::SHUTDOWN);
+    return;
+  }
+
+  int range = map(sensorReading, _sensorMin, _targetTemp, 0, 10);
   Serial.print("Range is: ");
   Serial.println(range); //just for debugging
-  // do something different depending on the
-  // range value:
-  if (range > 0 && range < 7) { //always gallop when temp is below sensorMin
-    hotAllocation.setState(GALLOP);
-    Serial.println("flasher below Min Temp... Galloping");
-  }
   switch (range) {
-    case 0:    // temp is at sensorMin Celsius
+    case -2 ... 6:    // temp is at sensorMin Celsius
       {
-        hotAllocation.setState(GALLOP);
+        _hotFlasher.setState(FlashRate::GALLOP);
         Serial.println("flasher Galloping");
       }
       break;
     case 7:    // 70% towards Target
       {
-        hotAllocation.setState(TROT);
+        _hotFlasher.setState(FlashRate::TROT);
         Serial.println("flasher Trotting");
       }
-
       break;
     case 8:    // 80% towards Target
       {
-        hotAllocation.setState(CRAWL);
+        _hotFlasher.setState(FlashRate::CRAWL);
         Serial.println("flasher Crawling");
       }
       break;
-    case 9:    // 90%
+    case 9 ... 10:    // 90%
       {
-        hotAllocation.setState(IDLE);
-        fanAllocation.setState(GALLOP); //255 is Max spinning of fan.
+        _hotFlasher.setState(FlashRate::IDLE);
+        _coolFlasher.setState(FlashRate::GALLOP); 
         Serial.println("flasher Idle and fan cooling");
-      }
-      default:
-      {
-        Serial.print("Something Wrong with Temp FSM.");
       }
       break;
   }

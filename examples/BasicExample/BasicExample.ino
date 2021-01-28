@@ -1,33 +1,70 @@
-//For now, and for Arduino IDE, make sure you have these libraries in the same folder as the ino file.
-//TempSensor.h contains and uses its own versions of the standard Thermistor and Thermocouple libraries.
-
 #include "Heater.h"
 #include "Flasher.h"
 #include "TempSensor.h"
-//#include <arduino.h> //My IDE required this. Don't think arduino ide needs it.
+#include "MyThermistor.h"
+#include "MyThermocouple.h"
+#include <AsyncDelay.h>
 
-//heaterOne instantiation - This is an example using a thermistor - check heaterTwo if you want to rather use a Thermocouple.
-//=============================
-Flasher hotFlasher_PM(21); //input the digital pin that you want to flash some kind of heater element with eg. the pin attached to an SSR Relay, attached to a stove.
-Flasher fanFlasher_PM(20); //input the digital pin that you want to use for cooling.  When the Target Temp is approaching or surpassed, this pin goes HIGH to prevent over-shooting.
-Thermistor pm(A0); //input the analogue pin for your thermistor. This creates the Thermistor object for heaterOne to use.
-TempSensor *tMistor_PM = &pm; 
-Heater heaterOne("Heater One", hotFlasher_PM, fanFlasher_PM, tMistor_PM);
+
+int thermoSCK = 8;
+int thermoCS = 9;
+int thermoSO = 10;
+
+MyThermistor pm(A0); //input the analogue pin for your thermistor. This creates the Thermistor object for heaterOne to use.
+MyThermocouple thermoC(thermoSCK, thermoCS, thermoSO);
+// A TempSensor can be either a MyThermistor or a MyThermocouple
+// The TempSensor class behaves more like an interface, making sure that 
+// either option exposes a getTempC function.
+// In this case it is inheritance: A TempSensor *is a* Thermocouple or *is a* Thermistor.
+
+TempSensor *thermistorMain = &pm; 
+TempSensor *tCouple = &thermoC;
+
+Flasher hotFlasher(LED_BUILTIN);
+Flasher fanFlasher(12); // 
+
+// Now the heater receives the TempSensor, hotFlasher (usually going to a relay for an element), and coolFlasher (usually going to a fan/radiator)
+// This being an example of composition, and a hardware version of dependency injection.
+// The user still instantiates these dependancies, but gives them to the Heater to control.
+Heater mainHeater(tCouple, hotFlasher, fanFlasher);
+
+enum FlashRate
+{
+  IDLE  = 1,     // Long off short on.
+  TROT = 2,
+  CRAWL = 3,
+  GALLOP = 4,    // Long on short off.
+  SHUTDOWN = 5
+};
+AsyncDelay delay_6s;
+AsyncDelay delay_1s;
 
 void setup(){
+  delay_6s.start(6000, AsyncDelay::MILLIS);
+  delay_1s.start(1000, AsyncDelay::MILLIS);
   Serial.begin(115200);
-  pinMode(14,OUTPUT); digitalWrite(14, LOW); //in my case this code is just here to make pin 14 into a groundpin
-
-  heaterOne.setup(); //sets up the required pins
-  heaterOne.printInfo(); // optional (more for debugging)
-  heaterOne.setMinMaxTemp(5, 45); // set up the operating range for the heater. Think room-temp to Max operating temp. Here it is set to 45 deg C for testing with a coffee-cup
-  heaterOne.setTargetTemp(43); // set target temp in C. This is the Heater Object's most important function. In my application this function will be used repeatedly to set new target temps for each heater, according to the Emptying or Filling state of the different Heat Zones.
-
+  pm.setup();
+  delay(500);
+  thermoC.setup();
+  mainHeater.setup();
+  mainHeater.setMinMaxTemp(25, 70); // In this case for testing with a cup of hot water.
+  mainHeater.setTargetTemp(55);
  }
 
 void loop(){
-  heaterOne.loop();
-  delay(1000);
-  heaterOne.controlFlasher(); //This initiates the Heater Finite State Machine, so that the flash-rate at the digital pin decreases the closer we get to targetTemp.
-  delay(3000);
+    if (delay_6s.isExpired()) {
+    Serial.print("     6s delay millis=");
+    Serial.println(millis());
+    const double celsiusThermistor = thermistorMain->getTempC(); // Because of the composition-based approach, the user is still free to call and use their TempSensor/s independently of the Heater class.
+    const double celsiusThermocouple = tCouple->getTempC();
+    Serial.print("Thermistor: ");
+    Serial.println(celsiusThermistor);
+    Serial.print("Thermocouple: ");
+    Serial.println(celsiusThermocouple); 
+    delay_6s.repeat();
+  }
+  if (delay_1s.isExpired()) {
+    mainHeater.loop();
+    delay_1s.repeat();
+  }
 }

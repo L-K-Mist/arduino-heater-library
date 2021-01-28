@@ -2,28 +2,25 @@
 #define  HEATER_H
 #include "Flasher.h"
 #include "TempSensor.h"
-#include <arduino.h>
-
+#include <Arduino.h>
 
 class Heater
 {
 public:
-  Heater(String name, Flasher allocHot, Flasher allocFan, TempSensor* allocSense);
+  Heater(TempSensor* tempSensor, Flasher hotFlasher, Flasher coolFlasher);
   void setTargetTemp(unsigned int targetTemp);
   void setMinMaxTemp(int sensorMin, int sensorMax);
   void controlFlasher();
-  void printInfo();
   void setup();
   void loop();
   double zoneTempC = 0;
 protected:
-  int sensorMin_;
-  int sensorMax_;
-  unsigned int targetTemp_;
-  String name_;
-  Flasher hotAllocation;
-  Flasher fanAllocation;
-  TempSensor* senseAllocation;
+  int _sensorMin;
+  int _sensorMax;
+  unsigned int _targetTemp;
+  Flasher _hotFlasher;
+  Flasher _coolFlasher;
+  TempSensor* _tempSensor;
 };
 
 #endif
