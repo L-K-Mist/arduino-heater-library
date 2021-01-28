@@ -32,6 +32,16 @@ void Heater::setMinMaxTemp(int sensorMin, int sensorMax)
     _sensorMax = sensorMax;
 }
 
+void Heater::setTargetTemp(unsigned int targetTemp)
+{
+    _targetTemp = targetTemp;
+}
+
+double Heater::getTempC()
+{
+    return _tempSensor->getTempC();
+}
+
 void Heater::loop()
 {
   _tempSensor->loop();
@@ -40,9 +50,6 @@ void Heater::loop()
   this->controlFlasher();
 }
 
-void Heater::setTargetTemp(unsigned int targetTemp){
-    _targetTemp = targetTemp;
-  }
 
   // the main State Machine
   //=======================
