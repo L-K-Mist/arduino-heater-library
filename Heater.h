@@ -11,6 +11,8 @@ public:
   void setTargetTemp(unsigned int targetTemp);
   void setMinMaxTemp(int sensorMin, int sensorMax);
   double getTempC();
+  unsigned char getHeaterState();
+  unsigned char getCoolerState();
   void controlFlasher();
   void setup();
   void loop();

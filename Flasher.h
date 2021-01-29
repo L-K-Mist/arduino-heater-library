@@ -8,10 +8,10 @@ class Flasher
     int flasherPin_;
     long _onTime;     // milliseconds of on-time
     long _offTime;    // milliseconds of off-time
-    unsigned char _state;
     int _pinState;                //ledState used to set the LED
     unsigned long _previousMillis; // will store last time LED was updated
   public:
+    unsigned char _state;
     Flasher(int flasherPin);
     void setup();
     void loop();
