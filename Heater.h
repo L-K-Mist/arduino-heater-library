@@ -10,6 +10,9 @@ public:
   Heater(TempSensor* tempSensor, Flasher hotFlasher, Flasher coolFlasher);
   void setTargetTemp(unsigned int targetTemp);
   void setMinMaxTemp(int sensorMin, int sensorMax);
+  double getTempC();
+  unsigned char getHeaterState();
+  unsigned char getCoolerState();
   void controlFlasher();
   void setup();
   void loop();

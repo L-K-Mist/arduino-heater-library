@@ -44,31 +44,25 @@ void Flasher::setState(unsigned char state)
   switch(_state)
   {
     case IDLE:
-    Serial.print(" yes, idling");
-      _onTime = 1000;
-      _offTime = 9000;
+      _onTime = 1500;
+      _offTime = 8000;
     break;
 
     case CRAWL:
-    Serial.print(" yes, crawling");
     _onTime = 4000;
     _offTime = 6000;
     break;
 
     case TROT:
-    Serial.print(" yes, trotting");
     _onTime = 5000;
     _offTime = 5000;
     break;
 
     case GALLOP:
-    Serial.print(" yes, galloping");
-    _onTime = 9000;
-    _offTime = 1000;
+    digitalWrite(flasherPin_, HIGH);
     break;
 
     case SHUTDOWN:
-    Serial.print(" yes, shutting down");
     digitalWrite(flasherPin_, LOW);
     break;
   }
